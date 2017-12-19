@@ -1,0 +1,182 @@
+package student;
+public class st_detail {
+    String usn,dept_name,grade1,grade2,grade3;
+    double sgpa;
+    public st_detail(String u,String d,String g1,String g2,String g3,double sg)
+    {
+        usn=u;
+        dept_name=d;
+        grade1=g1;
+        grade2=g2;
+        grade3=g3;
+        sgpa=sg;
+    }
+    public void display()
+    {
+        System.out.println("usn "+usn+" department name "+dept_name+" grade 1 "+grade1+" grade 2 "+grade2+" grade 3 "+grade3+" sgpa "+sgpa);
+    }
+}
+
+
+
+
+//create package staff
+//create class staff_detail in package staff
+
+
+package staff;
+public class staff_detail {
+String id,name,designation,sub_handled;
+public staff_detail(String i,String n,String d,String s)
+{
+    id=i;
+    name=n;
+    designation=d;
+    sub_handled=s;
+}
+public void display()
+{
+    System.out.println("id "+id+" name "+name+" designation "+designation+" subject handled "+sub_handled);
+}
+}
+
+
+//now create class detail outside both packages
+
+import student.*;
+import staff.*;
+
+public class detail {
+public static void main(String args[])
+{
+    st_detail o1=new st_detail("1ms15cs145","cse","s","s","s",9.60);
+    o1.display();
+    staff_detail o2=new staff_detail("1","ganesh","professor","dbms");
+    o2.display();
+}
+}
+
+
+
+///////////////////b
+
+//Create table police with atrributes phone,area
+
+
+Input.html
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="Police_station" method="post">
+<fieldset>
+<input type="radio" name="n" value=1 checked> Area<br>
+<input type="radio" name="n" value=2> Phone no<br>
+Enter area/phone no:<input type="text" name="ap"><br>
+</fieldset>
+    <button type="submit">submit</button><br>
+    <button type="reset">Cancel</button>
+</form> 
+</body>
+</html>
+
+
+servlet(police_station.java)
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class Police_station
+ */
+@WebServlet("/Police_station")
+public class Police_station extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+          response.setContentType("text/html;charset=UTF-8");
+          PrintWriter out = response.getWriter();
+          String url = "jdbc:mysql://localhost:3306/";
+          String dbName = "mydb";
+          String driver = "com.mysql.jdbc.Driver";
+          String user = "root"; 
+          String password = "";
+          PreparedStatement pstmt;
+          Statement st;
+          try {
+              
+              Class.forName(driver);
+              Connection conn = DriverManager.getConnection(url+dbName, user, password);
+              String query="select area,phone from police";
+              st=conn.createStatement();
+              ResultSet rs=st.executeQuery(query);
+              int n=Integer.parseInt(request.getParameter("n"));
+              switch(n)
+              {
+              case 1: int c=1;
+                      while(rs.next())
+                       {    String s=request.getParameter("ap");
+                              if(rs.getString("area").equals(s))
+                              {
+                                  out.println("area "+s+" phone "+rs.getString("phone"));
+                                  c=0;
+                                  break;
+                              }
+                          
+                       }
+                      if(c==1)
+                      {
+                          out.println("area does not exists");
+                          break;
+                      }
+                      break;
+              case 2:    int c1=1;
+                      while(rs.next())
+                      {    
+                      String s=request.getParameter("ap");
+                           if(rs.getString("phone").equals(s))
+                            {
+                                 out.println("phone "+s+" area "+rs.getString("area"));
+                                 c1=0;
+                                 break;
+                            }
+                 
+                      }
+                             if(c1==1)
+                           {
+                                out.println("phone no does not exists");
+                              break;
+                           }
+                             break;
+              }
+              
+          }
+          
+          catch(Exception e)
+          {
+              out.println(e);
+          }
+        
+        
+    }
+
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        doGet(request, response);
+    }
+
+}
