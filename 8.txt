@@ -1,0 +1,151 @@
+class wait_eat
+{
+    int n;
+    boolean value=false;
+    synchronized public int eat()
+    {  
+        while(!value)
+        {
+            try
+            {
+                wait();
+            }
+            catch(Exception e)
+            {
+                System.out.println(e);
+            }
+        }
+        System.out.println("got meal no "+n);
+        value=false;
+        notify();
+        return n;
+    }
+    synchronized public void put(int n)
+    {
+        while(value)
+        {
+            try
+            {
+                wait();
+            }
+            catch(Exception e)
+            {
+                System.out.println(e);
+            }
+        }
+         this.n=n;
+         System.out.println("put meal no"+n);
+         value=true;
+         notify();
+        
+    }
+}
+class mythread extends Thread
+{
+    wait_eat p;
+    mythread(wait_eat m)
+    {
+        p=m;
+        this.start();
+    }
+    public void run()
+    {
+        int i=0;
+        try
+        {
+        while(true)
+        {
+            p.put(i++);
+            sleep(500);
+        }
+        }
+        catch(Exception e)
+        {
+        }
+    }
+}
+class mythreadt extends Thread
+{
+    wait_eat p;
+    mythreadt(wait_eat m)
+    {
+        p=m;
+        this.start();
+    }
+    public void run()
+    {
+        try
+        {
+        while(true)
+        {
+            p.eat();
+            sleep(500);
+            
+        }
+        }
+        catch(Exception e)
+        {
+        }
+    }
+}
+public class chef_wait {
+    public static void main(String args[])
+    {
+        wait_eat p=new wait_eat();
+        mythread m1=new mythread(p);
+        mythreadt m2=new mythreadt(p);
+        System.out.println("ctrl+c to stop");
+    }
+
+}
+
+
+
+//////////////////////////////////////////b
+
+
+
+
+
+html file:
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="eightb.jsp" method="post">
+Marks:<input type="text" name="marks">
+<input type="submit" name="enter">
+</form>
+</body>
+</html>
+
+jsp file:
+
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+int m=Integer.parseInt(request.getParameter("marks"));
+if(m>=90)
+    out.println("A grade");
+else if((m>=80) && (m<=89))
+    out.println("B grade");
+else if ((m>=70)&& (m<=79))
+    out.println("C grade");
+else 
+    out.println("FAIL");
+
+%>
+</body>
+</html>
+
