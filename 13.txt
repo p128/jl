@@ -1,0 +1,155 @@
+package java_lab;
+import java.util.Scanner;
+
+abstract class Reservation{
+abstract public boolean reserve(int seat, String typeOfSeat);
+}
+
+class ReserveTrain extends Reservation{
+
+int seat;
+String tos;
+
+public boolean reserve(int seat, String typeOfSeat){
+this.seat = seat;
+tos = typeOfSeat;
+
+if(this.seat>0 && tos != null )
+    return true;
+else return false;
+}
+}
+
+class ReserveBus extends Reservation{
+
+int seat;
+String tos;
+public boolean reserve(int seat, String typeOfSeat){
+this.seat = seat;
+tos = typeOfSeat;
+if(this.seat>0 && tos != null )
+    return true;
+else return false;
+}
+}
+
+class thirteenA {
+public static void main(String[] args){
+Scanner sc = new Scanner(System.in);
+ReserveTrain rt = new ReserveTrain();
+ReserveBus rb = new ReserveBus();
+
+
+int op,seat;
+String tos;
+boolean b;
+
+System.out.println("Select an option:\n 1.Reserve Train\n 2.Reserve Bus");
+op = sc.nextInt();
+switch(op){
+case 1:
+    System.out.println("Enter the type of seat (AC/Sleeper/Normal)");
+    tos = sc.next();
+    System.out.println("Select a seat no.");
+    seat = sc.nextInt();
+    b = rt.reserve(seat,tos);
+    System.out.println("Reservation Sucessful: "+b);
+case 2:
+    System.out.println("Enter the type of seat (AC/Sleeper/Normal)");
+    tos = sc.next();
+    System.out.println("Select a seat no.");
+    seat = sc.nextInt();
+    b = rb.reserve(seat,tos);
+    System.out.println("Reservation Sucessful: "+b);
+}
+}
+}
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////
+
+
+
+
+cookietype.java
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/cookietype")
+public class cookietype extends HttpServlet {
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+           for(int i=0;i<3;i++)
+           {
+           Cookie mycookie=new Cookie("session-cookie-"+i,"cookie value S "+i);
+           response.addCookie(mycookie);
+           mycookie=new Cookie("persistent-cookie-"+i,"cookie value P "+i);
+           mycookie.setMaxAge(3600);
+           response.addCookie(mycookie);
+           }
+           response.setContentType("text/html");
+            PrintWriter pw=response.getWriter();
+            pw.println("cookie created");
+    }
+
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        doGet(request, response);
+    }
+
+}
+
+
+cookieread.java
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+@WebServlet("/cookieread")
+public class cookieread extends HttpServlet {
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Cookie[] cookies=request.getCookies();
+        String name="";
+        String value="";
+        response.setContentType("text/html");
+        PrintWriter pw=response.getWriter();
+        if(cookies==null)
+        {
+            pw.println("<tr><th colspan=2>no cookies<br>");
+        }
+        else
+        {
+        for(int i=0;i<cookies.length;i++)
+        {
+            name=cookies[i].getName();
+            value=cookies[i].getValue();
+            pw.println("<tr><td>"+name+"</td><td>value "+value+"</td></tr><br>");
+        }
+        }
+}
+        
+        
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        doGet(request, response);
+    }
+
+}
