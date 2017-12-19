@@ -1,0 +1,165 @@
+import java.util.Scanner;
+
+class AgeOutOfRangeException extends Exception{
+            AgeOutOfRangeException() {    }
+}
+class LowCGpaException extends Exception{
+
+          LowCGpaException()     {}
+}
+
+public class sixa {
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        int age;
+        Double cgpa;
+        
+        Scanner sc=new Scanner(System.in);  
+        System.out.println("Enter your age");  
+        age=sc.nextInt();  
+        System.out.println("Enter your cgpa");  
+        cgpa=sc.nextDouble();
+        
+        try {
+            if(age>25) {
+                throw new AgeOutOfRangeException(); 
+            }
+            try {
+                if(cgpa<8)
+                {
+                    throw new LowCGpaException();
+                }
+                System.out.println("Your application is accepted and is under study.");
+            }
+            catch(LowCGpaException e) {
+                System.out.println("less cgpa");
+            }
+            
+        }
+        catch(AgeOutOfRangeException e) {
+            System.out.println("age out of bound");
+        }
+
+    }
+
+}
+
+
+/////////////////////////////b
+
+
+
+
+enter_detail.html
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Insert title here</title>
+</head>
+<body>
+<form action="enter_detail" method="post">
+<fieldset>
+Enter name:<input type="text" name="name"><br>
+Enter id:<input type="text" name="id"><br>
+Enter addr:<input type="text" name="addr"><br>
+Enter date of birth(dd:mm:yyyy)format :<input type="text" name="dob"><br>
+</fieldset>
+    <button type="submit">submit</button><br>
+    <button type="reset">Cancel</button>
+</form> 
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+Enter_detail.servlet
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.servlet.annotation.WebServlet;
+import java.sql.Statement;
+import java.sql.PreparedStatement;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+//import com.java.sql.Connection;
+import com.mysql.jdbc.*;
+import javax.servlet.RequestDispatcher;
+ 
+ 
+ 
+ 
+@WebServlet("/enter_detail")
+public class enter_detail extends HttpServlet {
+              protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                           response.setContentType("text/html;charset=UTF-8");
+                           PrintWriter out = response.getWriter();
+                           String url = "jdbc:mysql://localhost:3306/";
+                           String dbName = "mydb";
+                           String driver = "com.mysql.jdbc.Driver";
+                           String user = "root"; 
+                           String password = "";
+                           PreparedStatement pstmt;
+                           Statement st;
+                  try {
+               
+   Class.forName(driver);
+   Connection conn = DriverManager.getConnection(url+dbName, user, password);
+   int id=Integer.parseInt(request.getParameter("id"));
+   String name=request.getParameter("name");
+   String addr=request.getParameter("addr");
+   String dob=request.getParameter("dob");
+   
+   String query="insert into employee values(?,?,?,?)";
+   pstmt=conn.prepareStatement(query);
+   pstmt.setInt(1,id);
+   pstmt.setString(2, name);
+   pstmt.setString(3, addr);
+   pstmt.setString(4, dob);
+   pstmt.execute();
+   out.println("success");
+  
+  String query1="select * from employee";
+  st=conn.createStatement();
+  ResultSet rs=st.executeQuery(query1);
+  while(rs.next())
+  {
+      out.println("<table> <tr> <th>name</th> <th>id</th><th> address</th> <th>dob</th></tr>");
+      String n=rs.getString("employee_name");
+      int i=rs.getInt("empid");
+      String a=rs.getString("address");
+      String d=rs.getString("date_of_birth");
+      out.println("<tr> <th>"+n+"</th> <th>"+i+"</th><th>"+a+"</th> <th>"+d+"</th></tr>");
+      
+ }
+  out.println("</table>");
+  
+ }
+        catch(Exception e)
+        {
+                      out.println("ERROR"+e);
+                    
+                      
+        }
+
+}
+
+              protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                          
+                           doGet(request, response);
+              }
+}
