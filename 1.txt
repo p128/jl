@@ -1,0 +1,164 @@
+interface student
+{
+    
+    String getValue();
+}
+interface department
+{
+    
+    float getAttendence();
+}
+
+interface exam extends student,department
+{
+    float calattendance();
+    boolean eligible();
+}
+class cal implements exam
+{
+    int sno;
+    String sname;
+    String clas;
+            float attendance;
+            float attperc;
+    public cal(int s,String sn,String cl,float a)
+    {
+        sno=s;
+        sname=sn;
+        clas=cl;
+        attendance=a;
+    }
+    public String getValue()
+    {
+        return ("student name "+sname+" class "+clas+" sno "+sno);
+    }
+    
+    public float getAttendence()
+    {
+        return attperc;
+    }
+    public float calattendance()
+    {
+        attperc=(attendance/54)*100;
+        return attperc;
+    }
+    public boolean eligible()
+    {
+        if(attperc>=85)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
+public class A1 {
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        exam o1,o2,o3;
+        o1=new cal(1,"gaurav","5b",47);
+        o1.calattendance();
+        if(o1.eligible())
+        {
+            
+            System.out.println(o1.getValue());
+            System.out.println("attendance perc "+o1.getAttendence());
+            System.out.println("eligible");
+        }
+
+        else
+        {
+            
+            System.out.println(o1.getValue());
+            System.out.println("attendance perc "+o1.getAttendence());
+            System.out.println("not eligible");
+        }
+        
+        o2=new cal(2,"manish","5b",38);
+        o2.calattendance();
+        if(o2.eligible())
+        {
+            
+            System.out.println(o2.getValue());
+            System.out.println("attendance perc "+o2.getAttendence());
+            System.out.println("eligible");
+        }
+
+        else
+        {
+            
+            System.out.println(o2.getValue());
+            System.out.println("attendance perc "+o2.getAttendence());
+            System.out.println("not eligible");
+        }
+        o3=new cal(3,"ullas","5b",27);
+        o3.calattendance();
+        if(o3.eligible())
+        {
+            
+            System.out.println(o3.getValue());
+            System.out.println("attendance perc "+o3.getAttendence());
+            System.out.println("eligible");
+        }
+
+        else
+        {
+            
+            System.out.println(o3.getValue());
+            System.out.println(o3.getAttendence());
+            System.out.println("not eligible");
+        }
+    }
+
+}
+
+
+//b
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class department {
+public static void main(String args[])
+{
+    
+    String driver="com.mysql.jdbc.Driver";
+    String url="jdbc:mysql://localhost:3306/";
+    String dbname="mydb";
+    String username="root";
+    String password="";
+    try
+    {
+        Class.forName(driver);
+        Connection con=DriverManager.getConnection(url+dbname, username, password);
+        String query="select No_of_Employee from department where Name='CSE'";
+        Statement st=con.createStatement();
+        ResultSet rs=st.executeQuery(query);
+        rs.next();
+        System.out.println("No of employees in cse department "+rs.getInt("No_of_Employee"));
+        String query2="select Name,Dept_id from department where Year_Established='2010'";
+        Statement st1=con.createStatement();
+        ResultSet rs1=st.executeQuery(query2);
+        while(rs1.next())
+        {
+            String name=rs1.getString("Name");
+            int did=rs1.getInt("Dept_id");
+            System.out.println("Name "+name+" Dept_id "+did );
+        }
+        st.close();
+        st1.close();
+        con.close();
+    }
+    
+    catch(Exception e)
+    {
+        System.out.println("error"+e);
+    }
+}
+}
