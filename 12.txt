@@ -1,0 +1,164 @@
+
+class mythread extends Thread
+{
+    int n;
+    mythread(int n)
+    {
+        this.n=n;
+    }
+    public void run()
+    {
+        System.out.println("running thread "+n);
+        while(true)
+        {
+            
+        }
+        
+    }
+    
+}
+public class Fivethread {
+public static void main(String args[])
+{
+    mythread t1=new mythread(1);
+    mythread t2=new mythread(2);
+    mythread t3=new mythread(3);
+    mythread t4=new mythread(4);
+    mythread t5=new mythread(5);
+    t1.setPriority(9);
+    t2.setPriority(8);
+    t3.setPriority(7);
+    t4.setPriority(6);
+    t5.setPriority(5);
+    t1.start();
+    t2.start();
+    t3.start();
+    t4.start();
+    t5.start();
+    try
+    {
+    t1.sleep(100);
+    t2.sleep(100);
+    }
+    catch(Exception e)
+    {
+    }
+    
+        if(t1.isAlive())
+        {
+            System.out.println("active t1");
+        }
+        else
+            System.out.println("sleep t1");
+        
+        if(t2.isAlive())
+        {
+            System.out.println("active t2");
+        }
+        else
+            System.out.println("sleep t2");
+
+        
+        if(t3.isAlive())
+        {
+            System.out.println("active t3");
+        }
+        else
+            System.out.println("sleep t3");
+        
+        if(t4.isAlive())
+        {
+            System.out.println("active t4");
+        }
+        else
+            System.out.println("sleep t4");
+        
+        if(t5.isAlive())
+        {
+            System.out.println("active t5");
+        }
+        else
+            System.out.println("sleep t5");
+}
+}
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////b
+
+
+
+
+
+
+counter.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%@ page import = "java.io.*,java.util.*" %>
+<%
+         Integer hitsCount = (Integer)application.getAttribute("hitCounter");
+         if( hitsCount ==null || hitsCount == 0 ) {
+            out.println("Welcome to my website!");
+            hitsCount = 1;
+         } else {
+            out.println("Welcome back to my website!");
+            hitsCount += 1;
+         }
+         application.setAttribute("hitCounter", hitsCount);
+      %>
+     <p>Total number of visits: <%= hitsCount%></p>
+</body>
+</html>
+
+form.jsp
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="check.jsp" method="post">
+<fieldset>
+Enter username:<input type="text" name="name"><br>
+Enter age:<input type="text" name="age"><br>
+Enter marks:<input type="text" name="marks"><br>
+</fieldset>
+    <button type="submit">submit</button><br>
+    <button type="reset">Cancel</button>
+</form> 
+</body>
+
+Check.jsp
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+int marks=Integer.parseInt(request.getParameter("marks"));
+String name=request.getParameter("name");
+int age=Integer.parseInt(request.getParameter("age"));
+if(marks>=20)
+{
+    out.println("eligible for see");
+}
+else
+{
+    out.println("not elligible");
+}
+RequestDispatcher rd=request.getRequestDispatcher("counter.jsp");
+rd.include(request,response);
+%>
+</body>
+</html>
