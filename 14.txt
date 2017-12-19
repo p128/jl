@@ -1,0 +1,117 @@
+import java.applet.Applet;
+import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+
+public class AppletRectangle extends Applet implements MouseMotionListener,MouseListener {
+     int startx,starty,x,y,height,width;
+    public void init()
+    {
+        addMouseListener(this);
+        addMouseMotionListener(this);
+    }
+    public void mouseDragged(MouseEvent e) {
+        x=startx;
+        y=starty;
+        height=e.getX()-startx;
+        width=e.getY()-starty;
+    
+        if(height<0)
+        {
+            x=e.getX();
+            height=Math.abs(height);
+        }
+        if(width<0)
+        {
+            y=e.getY();
+            width=Math.abs(width);
+        }
+        repaint();
+    }
+    public void mousePressed(MouseEvent e) {
+        startx=e.getX();
+        starty=e.getY();
+        showStatus("mouse pressed");
+    }
+    
+    public void paint(Graphics g)
+    {    
+        g.drawRect(x,y,height,width);
+    
+    }
+    public void mouseMoved(MouseEvent e) {}
+        public void mouseClicked(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {}
+        public void mouseExited(MouseEvent e) {}
+        public void mouseReleased(MouseEvent e) {}
+}
+
+
+
+
+///////////////////////////////////////////
+
+Class CollegeStudent.java
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class CollegeStudent {
+public static void main(String args[])
+{
+    String driver="com.mysql.jdbc.Driver";
+    String url="jdbc:mysql://localhost:3306/";
+    String dbname="COLLEGE";
+    String username="root";
+    String password="";
+    try
+    {
+    Class.forName(driver);
+    Connection con=DriverManager.getConnection(url+dbname, username, password);
+    String query="select * from student where cgpa<9";
+    Statement st=con.createStatement();
+    ResultSet rs=st.executeQuery(query);
+    System.out.println("students with cgpa less than 9");
+    while(rs.next())
+    {
+        String name=rs.getString("name");
+        double cgpa=rs.getDouble("cgpa");
+        System.out.println("name "+name+" cgpa "+cgpa);
+        
+    }
+    Statement st1=con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+    String query1="select name,cgpa from student";
+    ResultSet rs1=st1.executeQuery(query1);
+    while(rs1.next())
+    {
+        if(rs1.getString("name").equals("john"))
+        {
+            break;
+        }
+    }
+    rs1.updateDouble("cgpa", 9.4);
+    rs1.updateRow(); 
+    Statement st2=con.createStatement();
+    ResultSet rs2=st2.executeQuery("select * from student");
+    System.out.println("students");
+    while(rs2.next())
+    {
+        String name=rs2.getString("name");
+        double cgpa=rs2.getDouble("cgpa");
+        System.out.println("name "+name+" cgpa "+cgpa);
+        
+    }
+    st.close();
+    st1.close();
+    con.close();
+    }
+    catch(Exception e)
+    {
+        System.out.println(e);
+    }
+
+}
+}
