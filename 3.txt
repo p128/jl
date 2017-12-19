@@ -1,0 +1,166 @@
+import java.util.Scanner;
+class name extends Exception
+{
+    public String toString()
+    {
+        return ("name is a number name exception");
+    }
+}
+
+class age extends Exception
+{
+    public String toString()
+    {
+        return ("age is greater than 50 age exception");
+    }
+}
+class ex
+{
+    int age;
+    String name;
+    ex(int a,String n)
+    {
+        age=a;
+        name=n;
+    }
+}
+public class employee_details {
+    public static void main(String args[]) 
+    {
+        Scanner input=new Scanner(System.in);
+        System.out.println("Enter your age");  
+        int age=input.nextInt();
+        System.out.println("Enter your name");  
+        String name=input.next();
+    
+            int c=1,k=1;
+            try
+            {
+            try
+            {
+                int s=Integer.parseInt(name);
+                
+            }
+            catch(Exception e)
+            {
+                c=0;
+            }
+            if(c==1)
+            {
+                throw new name();
+            }
+            }
+        catch(name e)
+        {
+            System.out.println(e);
+            k=0;
+        }
+            
+        try
+        {
+            if(age>50)
+            {
+                throw new age();
+            }
+        }
+        catch(age e)
+        {
+            System.out.println(e);
+            k=0;
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+            k=0;
+        }
+        if(k==1)
+        {
+            ex ob=new ex(age,name);
+            System.out.println("object created successfully name "+name+" age "+age);
+            
+        }
+    }
+
+}
+
+
+////////////////b
+
+
+
+
+
+Input_name.html
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="capsInitials" method="post">
+<fieldset>
+Enter name:<input type="text" name="name"><br>
+</fieldset>
+    <button type="submit">submit</button><br>
+    <button type="reset">Cancel</button>
+</form> 
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+servlet(capsInitials.java)
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class capsInitials
+ */
+@WebServlet("/capsInitials")
+public class capsInitials extends HttpServlet {
+
+public String initials(String name)
+{
+    String ini=Character.toString(name.charAt(0));
+      for (int i=0; i<name.length(); i++){
+         
+          if (name.charAt(i)==' ' && i+1 < name.length() && name.charAt(i+1)!=' '){
+            ini+=name.charAt(i+1);
+          }
+       }
+      
+       return ini.toUpperCase();
+}
+protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    response.setContentType("text/html;charset=UTF-8");
+    PrintWriter out = response.getWriter();
+    String name=request.getParameter("name");
+    String ini=initials(name);
+    out.println("name "+name+"initials "+ini);
+    
+    }
+
+    
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        doGet(request, response);
+    }
+
+}
+
