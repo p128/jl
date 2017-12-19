@@ -1,0 +1,221 @@
+
+import java.util.Scanner;
+class record {
+    public String[] name=new String[50];
+    public int[] rnk=new int[50];
+    
+    record() {
+        //initialize name and rnk to 0
+    }
+    
+    void readvalues() {
+        for(int i=0;i<50;i++) {
+            Scanner sc=new Scanner(System.in);  
+            System.out.println("Enter your name");  
+            name[i]=sc.next();  
+            System.out.println("Enter your rank");  
+            rnk[i]=sc.nextInt();
+        }
+    }
+
+void display() {
+    for(int i=0;i<50;i++)
+    {
+        System.out.println(name[i]);
+        System.out.println(rnk[i]);
+    }
+}
+
+}
+
+class rank extends record{
+    int index;
+    rank(){
+        index=0;
+    }
+
+void highest() {
+    int max=0;
+    for(int i = 0; i < 50; i++)
+    {
+        if(max < rnk[i])
+        {
+            index=i;
+            max = rnk[i];
+        }
+    }
+}
+
+void display() {
+    super.display();
+    System.out.println(name[index]);
+    System.out.println(rnk[index]);
+}
+}
+
+
+
+public class sevena {
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+      rank r=new rank();
+      r.readvalues();
+      r.highest();
+      r.display();
+    }
+
+}
+
+
+
+
+
+//////////////////////////////////////////////////////////////////b
+
+
+
+
+Form.jsp
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action=book.jsp" method="post">
+<fieldset>
+Enter bookno:<input type="text" name="no"><br>
+Enter title:<input type="text" name="title"><br>
+Enter author:<input type="text" name="author"><br>
+Enter price :<input type="text" name="price"><br>
+</fieldset>
+    <button type="submit">submit</button><br>
+    <button type="reset">Cancel</button>
+</form> 
+</body>
+</html>
+
+Book.jsp
+
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%@ page import="java.sql.*" %>
+<%@ page import = "javax.servlet.RequestDispatcher" %>
+<%
+                   String url = "jdbc:mysql://localhost:3306/";
+                   String dbName = "mydb";
+                   String driver = "com.mysql.jdbc.Driver";
+                   String user = "root"; 
+                   String password = "";
+                   PreparedStatement pstmt;
+                   Statement st;
+                           try {
+                                  
+                      Class.forName(driver);
+                      Connection conn = DriverManager.getConnection(url+dbName, user, password);
+                      int no=Integer.parseInt(request.getParameter("no"));
+                      int price=Integer.parseInt(request.getParameter("price"));
+                      String author=request.getParameter("author");
+                      String title=request.getParameter("title");
+                      
+                      String query="insert into book values(?,?,?,?)";
+                      pstmt=conn.prepareStatement(query);
+                      pstmt.setInt(1, no);
+                      pstmt.setString(2,author);
+                      pstmt.setString(3, title);
+                      pstmt.setInt(4,price);
+                      pstmt.execute();
+                      RequestDispatcher rd=request.getRequestDispatcher("form1.html");
+                      rd.forward(request,response);
+                           }
+                     catch(Exception e)
+                           {
+                         out.println(e);
+                           }
+                      
+%>
+</body>
+</html>
+
+
+
+
+
+
+
+
+form1.html
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="display.jsp" method="post">
+<fieldset>
+Enter title:<input type="text" name="title"><br>
+</fieldset>
+    <button type="submit">submit</button><br>
+    <button type="reset">Cancel</button><br>
+</form> 
+</body>
+</html>
+
+
+
+
+display.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%@ page import="java.sql.*" %>
+<%
+                   String url = "jdbc:mysql://localhost:3306/";
+                   String dbName = "mydb";
+                   String driver = "com.mysql.jdbc.Driver";
+                   String user = "root"; 
+                   String password = "";
+                   PreparedStatement pstmt;
+                   Statement st;
+                           try {
+                                  
+                      Class.forName(driver);
+                      Connection conn = DriverManager.getConnection(url+dbName, user, password);
+                      String title=request.getParameter("title");
+                      String query="Select * from book where title='"+title+"'";
+                      st=conn.createStatement();
+                     ResultSet rs=st.executeQuery(query);
+                      while(rs.next())
+                        {
+                            String author=rs.getString("author");
+                            int no=rs.getInt("no");
+                            int price=rs.getInt("price");
+                            out.println("no "+no+" author "+author+" title "+title+" price "+price);
+                        }                           }
+                          catch(Exception e)
+                           {
+                         out.println(e);
+                           }
+%>
+</body>
+</html>
+
