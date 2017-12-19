@@ -1,0 +1,161 @@
+
+trigno.java
+
+package AdvMath;
+
+public class trigno {
+    double x,total;
+public trigno(double x)
+{
+    this.x=x*0.0174533;
+}
+public void cal()
+{
+    total=Math.sin(x)+Math.cos(x)+Math.tan(x);
+}
+public void display()
+{
+    System.out.println("sinx + cosx + tanx = "+total);
+}
+}
+
+
+Pythagorastriplet.java
+
+package AdvMath;
+
+public class pythagorastriplet {
+    public void pt(int limit)
+    {
+    int a, b, c=0;
+    int m = 2;
+    while (c < limit)
+        {
+           
+            for (int n = 1; n < m; ++n)
+            {
+                a = m*m - n*n;
+                b = 2*m*n;
+                c = m*m + n*n;
+                if (c > limit)
+                    break;
+              System.out.println(a+" "+b+" "+c);
+            }
+            m++;
+        }    
+     }
+}
+
+
+mainAdvMath.java
+
+import AdvMath.*;
+public class mainAdvMath {
+
+    public static void main(String args[])
+    {
+        trigno o1=new trigno(45.0);
+        o1.cal();
+        o1.display();
+        pythagorastriplet o2=new pythagorastriplet();
+        o2.pt(20);
+    }
+}
+
+
+//////////////////////////////////////////////////////////////b
+
+
+
+panid.html
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="clientwrite" method="post">
+<fieldset>
+Enter name:<input type="text" name="name"><br>
+Enter panid:<input type="text" name="panid"><br>
+Enter password:<input type="text" name="password"><br>
+
+</fieldset>
+    <button type="submit">submit</button><br>
+    <button type="reset">Cancel</button>
+</form> 
+</body>
+</html>
+
+clientwrite.java(servlet)
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/clientwrite")
+public class clientwrite extends HttpServlet {
+protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+           String client=request.getParameter("name");
+           String panid=request.getParameter("panid");
+           Cookie mycookie=new Cookie("panid",client);
+           response.addCookie(mycookie);
+           response.setContentType("text/html");
+           PrintWriter pw=response.getWriter();
+           pw.println("cookie created");
+           pw.close();
+         }
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        doGet(request, response);
+    }
+
+}
+
+clientread.java(servlet)
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/clientread")
+public class clientread extends HttpServlet {
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Cookie[] cookies=request.getCookies();
+        String name="";
+        String value="";
+        for(int i=0;i<cookies.length;i++)
+        {
+            name=cookies[i].getName();
+            if(name.equals("panid"))
+            {
+                value=cookies[i].getValue();
+                break;
+            }
+        }
+        response.setContentType("text/html");
+        PrintWriter pw=response.getWriter();
+        pw.println("<h2> welcome "+value+"</h2>");
+        pw.close();
+    }
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        doGet(request, response);
+    }
+
+}
+
+
