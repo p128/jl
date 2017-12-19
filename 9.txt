@@ -1,0 +1,134 @@
+import java.util.Scanner;
+import java.io.*;
+ 
+class Library{
+Scanner sc = new Scanner(System.in);  
+ int ano;
+ String title,author;
+ int fine;
+ 
+ void input(){
+ 
+ System.out.println("Enter Title of the book");
+ title = sc.nextLine();
+ System.out.println("Enter author name");
+ author = sc.nextLine();
+ System.out.println("Enter accession number");
+ ano = sc.nextInt();
+ 
+ }
+ 
+ void compute(int days_late){
+ fine = days_late * 2;
+ }
+ 
+ void display(){
+  System.out.print(" "+ano+" "+title+" "+author);
+ }
+}
+ 
+class NineA{
+static int days;
+public static void main(String[] args){
+Scanner sc = new Scanner(System.in); 
+Library obj = new Library();
+obj.input();
+System.out.println("Enter the number of days the book was delayed by: " );
+days = sc.nextInt();
+obj.compute(days);
+obj.display();
+}
+}
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////b
+
+
+
+
+import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class nineb {
+    public static void main(String args[])
+    {
+        String driver="com.mysql.jdbc.Driver";
+        String url="jdbc:mysql://localhost:3306/";
+        String dbname="mydb";
+        String username="root";
+        String password="";
+        try
+        {
+        Class.forName(driver);
+        Connection con=DriverManager.getConnection(url+dbname, username, password);
+        con.setAutoCommit(false); 
+       while(true)
+        {
+        System.out.println("enter your choice 1.add user 2.balance withdrawal 3.Deposit 4.rollback/commit");
+        Scanner input=new Scanner(System.in);
+        int n=input.nextInt();
+         switch(n)
+        {
+        case 1:    System.out.println("enter name");
+                String name=input.nextLine();
+                System.out.println("enter id");
+                int id=input.nextInt();
+                System.out.println("Account opening balance");
+                int balance=input.nextInt();
+                String query="insert into bank values(?,?,?)";
+                PreparedStatement pt=con.prepareStatement(query);
+                pt.setInt(1,id);
+                pt.setString(2, name);
+                pt.setInt(3, balance);
+                pt.execute();
+                break;
+        case 2:    System.out.println("enter id");
+            id=input.nextInt();
+                System.out.println("amount to withdraw");
+                balance=input.nextInt();
+                query ="select balance from bank where id="+id+"";
+                Statement st=con.createStatement();
+                ResultSet rs=st.executeQuery(query);
+                rs.next();
+                int b=rs.getInt("balance");
+                b=b-balance;
+                String query1="update balance set balance="+b+"where id="+id+"";
+                pt=con.prepareStatement(query1);
+                pt.execute();
+                break;
+        case 3:        System.out.println("enter id");
+                id=input.nextInt();
+                System.out.println("amount to deposit");
+                balance=input.nextInt();
+                query ="select balance from bank where id="+id+"";
+                Statement s=con.createStatement();
+                ResultSet r=s.executeQuery(query);
+                r.next();
+                int c=r.getInt("balance");
+                c=c+balance;
+                String quer="update balance set balance="+c+"where id="+id+"";
+                pt=con.prepareStatement(quer);
+                pt.execute();
+break;
+        case 4:    
+                    System.out.println("enter 1:commit 2:roolback");
+                int opt=input.nextInt();
+                if(opt==1)
+                    con.commit();
+                else
+                    con.rollback();
+                break;
+                }
+        }
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+    }}
