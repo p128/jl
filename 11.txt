@@ -1,0 +1,112 @@
+import java.util.Scanner;
+
+public class elevena {
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        String s=""; 
+        int count=0;
+        
+         System.out.println("Enter your string:"); 
+         Scanner scan = new Scanner(System.in);
+         s+=scan.nextLine();
+         scan.close();
+            
+            
+        s=s.toUpperCase();
+        System.out.println(s);
+        s=s.replaceAll(" ", "");
+        System.out.println(s);
+        
+        for(int i=0;i<s.length()-1;i++) {
+            char c=s.charAt(i);
+            char d=s.charAt(i+1);
+            if(c==d)
+            {
+                count=count+1;
+            }
+        }
+    System.out.println(count);
+    }
+    
+
+}
+
+
+
+
+//////////////////////////////////////////////////////////b
+
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class faculty
+ */
+@WebServlet("/faculty")
+public class faculty extends HttpServlet {
+protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+     response.setContentType("text/html");
+     PrintWriter out = response.getWriter();
+     String url = "jdbc:mysql://localhost:3306/";
+     String dbname = "mydb";
+     String driver = "com.mysql.jdbc.Driver";
+     String usr = "root";
+     String pwd = "";
+     Statement st;
+     PreparedStatement pst;
+     try
+         {
+             Class.forName(driver);
+             Connection con = DriverManager.getConnection(url+dbname,usr,pwd);
+             String query="select FacID,SubName from subjects";
+             st=con.createStatement();
+             ResultSet rs=st.executeQuery(query);
+             while(rs.next())
+             {
+                 int facid=rs.getInt("FacID");
+                 String sub=rs.getString("SubName");
+                 out.println("facid "+facid+" sub "+sub);
+                 out.println("<br>");
+             }
+             String query1="update subjects set SubName='java' where FacID=1 and SubID=1";
+             pst=con.prepareStatement(query1);
+             int n=pst.executeUpdate();
+             out.println("no of rows updated "+n);
+             out.println("<br>");
+             ResultSet rs1=st.executeQuery(query);
+             while(rs1.next())
+             {
+                 int facid=rs1.getInt("FacID");
+                 String sub=rs1.getString("SubName");
+                 out.println("facid "+facid+" sub "+sub);
+                 out.println("<br>");
+             
+             }
+         }
+         catch(Exception e)
+         {
+             out.println(e);
+         }
+
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        doGet(request, response);
+    }
+
+}
